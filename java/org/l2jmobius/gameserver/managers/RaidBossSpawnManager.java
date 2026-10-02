@@ -206,6 +206,7 @@ public class RaidBossSpawnManager
 	{
 		if ((spawnDat == null) || _spawns.containsKey(spawnDat.getId()))
 		{
+			
 			return;
 		}
 		
