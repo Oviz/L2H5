@@ -221,6 +221,7 @@ import handlers.chat.commands.voiced.Banking;
 import handlers.chat.commands.voiced.ChangePassword;
 import handlers.chat.commands.voiced.ChatAdmin;
 import handlers.chat.commands.voiced.ExperienceGain;
+import handlers.chat.commands.voiced.GrandBossStatus;
 import handlers.chat.commands.voiced.Lang;
 import handlers.chat.commands.voiced.Offline;
 import handlers.chat.commands.voiced.OfflinePlay;
@@ -554,6 +555,7 @@ public class MasterHandler
 			// ClanHandler.class,
 			ExperienceGain.class,
 			WeddingConfig.ALLOW_WEDDING ? Wedding.class : null,
+			WeddingConfig.ALLOW_WEDDING ? GrandBossStatus.class : null,
 			AutoPlayConfig.ENABLE_AUTO_PLAY ? AutoPlay.class : null,
 			BankingConfig.BANKING_SYSTEM_ENABLED ? Banking.class : null,
 			ChatModerationConfig.CHAT_ADMIN ? ChatAdmin.class : null,

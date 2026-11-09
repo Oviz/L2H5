@@ -149,7 +149,7 @@ public class IceQueensCastleBattle extends InstanceScript
 	
 	// Misc
 	private static final int MAX_PLAYERS = 27;
-	private static final int MIN_PLAYERS = 10;
+	private static final int MIN_PLAYERS = 2;
 	private static final int MIN_LEVEL = 82;
 	private static final int GLAKIAS_KILL_TIMER = 6; // Harcore Glakias Kill Timer in minutes
 	private static final int TEMPLATE_ID_EASY = 139; // Ice Queen's Castle

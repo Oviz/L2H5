@@ -125,6 +125,20 @@ public class Q00247_PossessorOfAPreciousSoul4 extends Quest
 		{
 			case CARADINE:
 			{
+				// ===== PAPILDOMAS KELIAS: jei žaidėjas turi Caradine's Letter, leisti pradėti iš karto =====
+				if (hasQuestItems(player, CARADINE_LETTER_LAST))
+				{
+					if (st.getState() == State.CREATED)
+					{
+						st.startQuest();
+					}
+					takeItems(player, CARADINE_LETTER_LAST, -1);
+					st.setCond(2, true);
+					player.teleToLocation(CARADINE_LOC, 0);
+					htmltext = "31745-1.html";
+					break;
+				}
+				// ===== ORIGINALI LOGIKA =====
 				switch (st.getState())
 				{
 					case State.CREATED:

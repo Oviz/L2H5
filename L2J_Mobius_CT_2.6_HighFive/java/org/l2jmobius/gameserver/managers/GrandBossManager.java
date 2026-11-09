@@ -51,7 +51,7 @@ public class GrandBossManager
 	// SQL queries
 	private static final String DELETE_GRAND_BOSS_LIST = "DELETE FROM grandboss_list";
 	private static final String INSERT_GRAND_BOSS_LIST = "INSERT INTO grandboss_list (player_id,zone) VALUES (?,?)";
-	private static final String UPDATE_GRAND_BOSS_DATA = "UPDATE grandboss_data set loc_x = ?, loc_y = ?, loc_z = ?, heading = ?, respawn_time = ?, currentHP = ?, currentMP = ?, status = ? where boss_id = ?";
+	private static final String UPDATE_GRAND_BOSS_DATA = "UPDATE grandboss_data set loc_x = ?, loc_y = ?, loc_z = ?, heading = ?, respawn_time = ?, death_time = ?, currentHP = ?, currentMP = ?, status = ? where boss_id = ?";
 	private static final String UPDATE_GRAND_BOSS_DATA2 = "UPDATE grandboss_data set status = ? where boss_id = ?";
 	
 	protected static final Logger LOGGER = Logger.getLogger(GrandBossManager.class.getName());
@@ -86,6 +86,7 @@ public class GrandBossManager
 				info.set("loc_z", rs.getInt("loc_z"));
 				info.set("heading", rs.getInt("heading"));
 				info.set("respawn_time", rs.getLong("respawn_time"));
+				info.set("death_time", rs.getLong("death_time")); // <- death_time
 				info.set("currentHP", rs.getDouble("currentHP"));
 				info.set("currentMP", rs.getDouble("currentMP"));
 				final int status = rs.getInt("status");
@@ -295,16 +296,22 @@ public class GrandBossManager
 						update.setLong(5, info.getLong("respawn_time"));
 						double hp = boss.getCurrentHp();
 						double mp = boss.getCurrentMp();
+						
+						long deathTime = info.getLong("death_time");
+						
 						if (boss.isDead())
 						{
 							hp = boss.getMaxHp();
 							mp = boss.getMaxMp();
+							deathTime = System.currentTimeMillis();
+							
 						}
 						
-						update.setDouble(6, hp);
-						update.setDouble(7, mp);
-						update.setInt(8, _bossStatus.get(e.getKey()));
-						update.setInt(9, e.getKey());
+						update.setLong(6, deathTime);
+						update.setDouble(7, hp);
+						update.setDouble(8, mp);
+						update.setInt(9, _bossStatus.get(e.getKey()));
+						update.setInt(10, e.getKey());
 						update.executeUpdate();
 						update.clearParameters();
 					}
@@ -346,16 +353,23 @@ public class GrandBossManager
 					ps.setLong(5, info.getLong("respawn_time"));
 					double hp = boss.getCurrentHp();
 					double mp = boss.getCurrentMp();
+					
+					long deathTime = info.getLong("death_time");
+					
 					if (boss.isDead())
 					{
 						hp = boss.getMaxHp();
 						mp = boss.getMaxMp();
+						deathTime = System.currentTimeMillis();
+						
 					}
 					
-					ps.setDouble(6, hp);
-					ps.setDouble(7, mp);
-					ps.setInt(8, _bossStatus.get(bossId));
-					ps.setInt(9, bossId);
+					ps.setLong(6, deathTime);
+					
+					ps.setDouble(7, hp);
+					ps.setDouble(8, mp);
+					ps.setInt(9, _bossStatus.get(bossId));
+					ps.setInt(10, bossId);
 					ps.executeUpdate();
 				}
 			}

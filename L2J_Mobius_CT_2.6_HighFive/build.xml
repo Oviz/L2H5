@@ -52,13 +52,13 @@
 				</not>
 			</condition>
 		</fail>
-		<condition property="JDK27.present">
+		<condition property="JDK25.present">
 			<and>
-				<javaversion atleast="27" />
+				<javaversion atleast="25" />
 				<available classname="com.sun.tools.javac.Main" />
 			</and>
 		</condition>
-		<fail unless="JDK27.present" message="Java 27 is required. But your version is Java ${ant.java.version} and probably JDK is not installed." />
+		<fail unless="JDK25.present" message="Java 27 is required. But your version is Java ${ant.java.version} and probably JDK is not installed." />
 	</target>
 
 	<target name="init" depends="checkRequirements" description="Create the output directories.">
@@ -67,7 +67,7 @@
 	</target>
 
 	<target name="compile" depends="init" description="Compile the source.">
-		<javac srcdir="${src}" classpathref="classpath" destdir="${build.bin}" compiler="modern" debug="true" debuglevel="lines,vars,source" includeantruntime="false" source="27" target="27" encoding="UTF-8" />
+		<javac srcdir="${src}" classpathref="classpath" destdir="${build.bin}" compiler="modern" debug="true" debuglevel="lines,vars,source" includeantruntime="false" source="25" target="25" encoding="UTF-8" />
 	</target>
 
 	<target name="jar" depends="compile" description="Create the jar files.">

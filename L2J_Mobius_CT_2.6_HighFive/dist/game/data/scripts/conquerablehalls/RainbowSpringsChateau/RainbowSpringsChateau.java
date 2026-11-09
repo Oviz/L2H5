@@ -379,7 +379,7 @@ public class RainbowSpringsChateau extends ClanHallSiegeEngine
 							{
 								htmltext = "35603-05.htm";
 							}
-							else if (party.getMemberCount() < 5)
+							else if (party.getMemberCount() < 3)
 							{
 								htmltext = "35603-06.htm";
 							}

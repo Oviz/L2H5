@@ -34,6 +34,7 @@ public class AutoPlaySettingsHolder
 	private final AtomicBoolean _shortRange = new AtomicBoolean();
 	private final AtomicBoolean _respectfulHunting = new AtomicBoolean(true);
 	private final AtomicInteger _autoPotionPercent = new AtomicInteger(50);
+	private final AtomicInteger _searchRange = new AtomicInteger(600);
 	
 	public AutoPlaySettingsHolder()
 	{
@@ -97,5 +98,15 @@ public class AutoPlaySettingsHolder
 	public void setAutoPotionPercent(int value)
 	{
 		_autoPotionPercent.set(value);
+	}
+	
+	public int getSearchRange()
+	{
+		return _searchRange.get();
+	}
+	
+	public void setSearchRange(int value)
+	{
+		_searchRange.set(value);
 	}
 }

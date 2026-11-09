@@ -114,6 +114,12 @@ public class AutoPlay implements IVoicedCommandHandler
 		player.getAutoPlaySettings().setShortRange(shortRange);
 		player.getAutoPlaySettings().setRespectfulHunting(respectfulHunting);
 		
+		// Restore hunt range (new setting).
+		if (settings.size() > 7)
+		{
+			player.getAutoPlaySettings().setSearchRange(settings.get(7));
+		}
+		
 		if (active)
 		{
 			AutoPlayTaskManager.getInstance().startAutoPlay(player);
@@ -143,7 +149,7 @@ public class AutoPlay implements IVoicedCommandHandler
 			player.getVariables().set(PlayerVariables.AUTO_USE_POTION, potionId);
 		}
 		
-		final List<Integer> settings = new ArrayList<>(7);
+		final List<Integer> settings = new ArrayList<>(8);
 		settings.add(0, player.getAutoPlaySettings().getOptions());
 		settings.add(1, player.isAutoPlaying() ? 1 : 0);
 		settings.add(2, player.getAutoPlaySettings().doPickup() ? 1 : 0);
@@ -151,6 +157,7 @@ public class AutoPlay implements IVoicedCommandHandler
 		settings.add(4, player.getAutoPlaySettings().isShortRange() ? 1 : 0);
 		settings.add(5, player.getAutoPlaySettings().getAutoPotionPercent());
 		settings.add(6, player.getAutoPlaySettings().isRespectfulHunting() ? 1 : 0);
+		settings.add(7, player.getAutoPlaySettings().getSearchRange());
 		player.getVariables().setIntegerList(PlayerVariables.AUTO_USE_SETTINGS, settings);
 	};
 	
@@ -210,6 +217,16 @@ public class AutoPlay implements IVoicedCommandHandler
 						case "range":
 						{
 							player.getAutoPlaySettings().setShortRange(!player.getAutoPlaySettings().isShortRange());
+							break COMMAND;
+						}
+						case "srange":
+						{
+							if ((paramArray.length > 1) && StringUtil.isNumeric(paramArray[1]))
+							{
+								int range = Integer.parseInt(paramArray[1]);
+								range = Math.max(200, Math.min(2000, range));
+								player.getAutoPlaySettings().setSearchRange(range);
+							}
 							break COMMAND;
 						}
 						case "mode0":
@@ -272,6 +289,9 @@ public class AutoPlay implements IVoicedCommandHandler
 				content = content.replace("%item_button%", AutoPlayConfig.ENABLE_AUTO_ITEM ? "<br><table width=295><tr><td height=31><center><button action=\"bypass voice .playitems\" value=\"Select Supply Items\" width=200 height=31 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td></tr></table>" : "");
 				content = content.replace("%potion_button%", AutoPlayConfig.ENABLE_AUTO_POTION ? "<br><table width=295><tr><td height=31><center><button action=\"bypass voice .playpotion\" value=\"Select Healing Potion\" width=200 height=31 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td></tr><tr><td height=31><center><table width=150><tr><td width=120><font color=\"CDB67F\">HP Percent (%percent%)</font></td><td><edit var=\"percentbox\" width=30 height=15></td><td><button value=\"Apply\" action=\"bypass voice .play percent $percentbox\" width=45 height=21 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr></table></center></td></tr></table>" : "");
 				content = content.replace("%percent%", String.valueOf(player.getAutoPlaySettings().getAutoPotionPercent()));
+				
+				// Hunt Range input (new).
+				content = content.replace("%srange%", String.valueOf(player.getAutoPlaySettings().getSearchRange()));
 				
 				if (player.isAutoPlaying())
 				{

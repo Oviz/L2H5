@@ -62,7 +62,7 @@ public class Q00456_DontKnowDontCare extends Quest
 	private static final int DRAGON_BEAST_ESSENCE = 17253;
 	
 	// Misc
-	private static final int MIN_PLAYERS = 18;
+	private static final int MIN_PLAYERS = 2;
 	private static final int MIN_LEVEL = 80;
 	private static final Map<Integer, Integer> MONSTER_NPCS = new HashMap<>();
 	private static final Map<Integer, Integer> MONSTER_ESSENCES = new HashMap<>();

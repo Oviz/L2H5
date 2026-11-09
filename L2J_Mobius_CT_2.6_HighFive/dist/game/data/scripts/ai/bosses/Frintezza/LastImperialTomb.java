@@ -179,7 +179,7 @@ public class LastImperialTomb extends InstanceScript
 	
 	// Misc
 	private static final int TEMPLATE_ID = 136;
-	private static final int MIN_PLAYERS = 9;
+	private static final int MIN_PLAYERS = 2;
 	private static final int MAX_PLAYERS = 27;
 	private static final int FRINTEZZA_WAIT_TIME = 10; // minutes
 	private static final int RANDOM_SONG_INTERVAL = 90; // seconds

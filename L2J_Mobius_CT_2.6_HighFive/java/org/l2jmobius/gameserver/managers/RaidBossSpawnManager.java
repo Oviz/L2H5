@@ -4,7 +4,7 @@
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * (at your option) any later version. 
  * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -162,15 +162,21 @@ public class RaidBossSpawnManager
 			final int respawnMinDelay = (int) (boss.getSpawn().getRespawnMinDelay() * NpcConfig.RAID_MIN_RESPAWN_MULTIPLIER);
 			final int respawnMaxDelay = (int) (boss.getSpawn().getRespawnMaxDelay() * NpcConfig.RAID_MAX_RESPAWN_MULTIPLIER);
 			final int respawnDelay = Rnd.get(respawnMinDelay, respawnMaxDelay);
-			final long respawnTime = System.currentTimeMillis() + respawnDelay;
+			
+			final long deathTime = System.currentTimeMillis();
+			final long respawnTime = deathTime + respawnDelay;
+			
 			info.set("currentHP", boss.getMaxHp());
 			info.set("currentMP", boss.getMaxMp());
 			info.set("respawnTime", respawnTime);
+			info.set("deathTime", deathTime);
+			
 			if (!_schedules.containsKey(boss.getId()) && ((respawnMinDelay > 0) || (respawnMaxDelay > 0)))
 			{
 				final Calendar time = Calendar.getInstance();
 				time.setTimeInMillis(respawnTime);
 				LOGGER.info(getClass().getSimpleName() + ": Updated " + boss.getName() + " respawn time to " + time.getTime());
+				
 				_schedules.put(boss.getId(), ThreadPool.schedule(new SpawnSchedule(boss.getId()), respawnDelay));
 				updateDb();
 			}
@@ -182,6 +188,7 @@ public class RaidBossSpawnManager
 			info.set("currentHP", boss.getCurrentHp());
 			info.set("currentMP", boss.getCurrentMp());
 			info.set("respawnTime", 0);
+			info.set("deathTime", 0);
 		}
 		
 		_storedInfo.put(boss.getId(), info);
@@ -199,6 +206,7 @@ public class RaidBossSpawnManager
 	{
 		if ((spawnDat == null) || _spawns.containsKey(spawnDat.getId()))
 		{
+			
 			return;
 		}
 		
@@ -312,7 +320,7 @@ public class RaidBossSpawnManager
 	private void updateDb()
 	{
 		try (Connection con = DatabaseFactory.getConnection();
-			PreparedStatement ps = con.prepareStatement("UPDATE raidboss_spawnlist SET respawn_time = ?, currentHP = ?, currentMP = ? WHERE boss_id = ?"))
+			PreparedStatement ps = con.prepareStatement("UPDATE raidboss_spawnlist SET respawn_time = ?, death_time = ?, currentHP = ?, currentMP = ? WHERE boss_id = ?"))
 		{
 			for (Entry<Integer, StatSet> entry : _storedInfo.entrySet())
 			{
@@ -341,11 +349,11 @@ public class RaidBossSpawnManager
 				
 				try
 				{
-					// TODO(Zoey76): Change this to use batch.
-					ps.setLong(1, info.getLong("respawnTime"));
-					ps.setDouble(2, boss.isDead() ? boss.getMaxHp() : info.getDouble("currentHP"));
-					ps.setDouble(3, boss.isDead() ? boss.getMaxMp() : info.getDouble("currentMP"));
-					ps.setInt(4, bossId);
+					ps.setLong(1, info.getLong("respawnTime", 0));
+					ps.setLong(2, info.getLong("deathTime", 0));
+					ps.setDouble(3, boss.isDead() ? boss.getMaxHp() : info.getDouble("currentHP"));
+					ps.setDouble(4, boss.isDead() ? boss.getMaxMp() : info.getDouble("currentMP"));
+					ps.setInt(5, bossId);
 					ps.executeUpdate();
 					ps.clearParameters();
 				}

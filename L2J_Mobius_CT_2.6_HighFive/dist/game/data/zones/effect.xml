@@ -2210,7 +2210,7 @@
 		<node X="25804" Y="-15088" />
 		<node X="26324" Y="-15704" />
 	</zone>
-	<zone name="Queen Ant Curse Zone" type="EffectZone" shape="NPoly" minZ="-5947" maxZ="-5547"> <!-- Custom -->
+	<!-- zone name="Queen Ant Curse Zone" type="EffectZone" shape="NPoly" minZ="-5947" maxZ="-5547"> 
 		<stat name="affectedLvlMin" val="50" />
 		<stat name="chance" val="100" />
 		<stat name="initialDelay" val="2000" />
@@ -2225,5 +2225,5 @@
 		<node X="-20570" Y="183381" />
 		<node X="-20310" Y="182673" />
 		<node X="-20762" Y="179129" />
-	</zone>
+	</zone -->
 </list>

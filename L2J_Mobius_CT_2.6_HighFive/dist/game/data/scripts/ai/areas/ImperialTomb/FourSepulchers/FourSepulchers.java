@@ -220,7 +220,7 @@ public class FourSepulchers extends Script implements IXmlReader
 		STORED_PROGRESS.put(3, 1);
 		STORED_PROGRESS.put(4, 1);
 	}
-	private static final int PARTY_MEMBER_COUNT = 4;
+	private static final int PARTY_MEMBER_COUNT = 2;
 	private static final int ENTRY_TIME = 55; // Minute for entry.
 	private static final int EVENT_TIME = 50; // Minutes for the event.
 	

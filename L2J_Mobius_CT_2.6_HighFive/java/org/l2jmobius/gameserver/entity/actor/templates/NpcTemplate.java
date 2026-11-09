@@ -736,9 +736,19 @@ public class NpcTemplate extends CreatureTemplate
 	{
 		// level difference calculations
 		final int levelDifference = victim.getLevel() - killer.getLevel();
-		final double levelGapChanceToDropAdena = MathUtil.scaleToRange(levelDifference, -RatesConfig.DROP_ADENA_MAX_LEVEL_DIFFERENCE, -RatesConfig.DROP_ADENA_MIN_LEVEL_DIFFERENCE, RatesConfig.DROP_ADENA_MIN_LEVEL_GAP_CHANCE, 100d);
-		final double levelGapChanceToDrop = MathUtil.scaleToRange(levelDifference, -RatesConfig.DROP_ITEM_MAX_LEVEL_DIFFERENCE, -RatesConfig.DROP_ITEM_MIN_LEVEL_DIFFERENCE, RatesConfig.DROP_ITEM_MIN_LEVEL_GAP_CHANCE, 100d);
+		// Ovis , Darom Raid bosu dropa visiems lygiams
+		// final double levelGapChanceToDropAdena = MathUtil.scaleToRange(levelDifference, -RatesConfig.DROP_ADENA_MAX_LEVEL_DIFFERENCE, -RatesConfig.DROP_ADENA_MIN_LEVEL_DIFFERENCE, RatesConfig.DROP_ADENA_MIN_LEVEL_GAP_CHANCE, 100d);
+		// final double levelGapChanceToDrop = MathUtil.scaleToRange(levelDifference, -RatesConfig.DROP_ITEM_MAX_LEVEL_DIFFERENCE, -RatesConfig.DROP_ITEM_MIN_LEVEL_DIFFERENCE, RatesConfig.DROP_ITEM_MIN_LEVEL_GAP_CHANCE, 100d);
 		
+		// Nauji pakeitimai
+		final double levelGapChanceToDropAdena = victim.isRaid() ? 100d : MathUtil.scaleToRange(levelDifference, -RatesConfig.DROP_ADENA_MAX_LEVEL_DIFFERENCE, -RatesConfig.DROP_ADENA_MIN_LEVEL_DIFFERENCE, RatesConfig.DROP_ADENA_MIN_LEVEL_GAP_CHANCE, 100d);
+		final double levelGapChanceToDrop = victim.isRaid() ? 100d : MathUtil.scaleToRange(levelDifference, -RatesConfig.DROP_ITEM_MAX_LEVEL_DIFFERENCE, -RatesConfig.DROP_ITEM_MIN_LEVEL_DIFFERENCE, RatesConfig.DROP_ITEM_MIN_LEVEL_GAP_CHANCE, 100d);
+		
+		// Jei norėčiau kad visi mestu nepriklausomai nuo lygio.
+		//
+		// final double levelGapChanceToDropAdena = 100d;
+		// final double levelGapChanceToDrop = 100d;
+		//
 		List<ItemHolder> calculatedDrops = null;
 		int dropOccurrenceCounter = victim.isRaid() ? RatesConfig.DROP_MAX_OCCURRENCES_RAIDBOSS : RatesConfig.DROP_MAX_OCCURRENCES_NORMAL;
 		if (dropOccurrenceCounter > 0)
@@ -931,8 +941,11 @@ public class NpcTemplate extends CreatureTemplate
 		
 		// level difference calculations
 		final int levelDifference = victim.getLevel() - killer.getLevel();
-		final double levelGapChanceToDropAdena = MathUtil.scaleToRange(levelDifference, -RatesConfig.DROP_ADENA_MAX_LEVEL_DIFFERENCE, -RatesConfig.DROP_ADENA_MIN_LEVEL_DIFFERENCE, RatesConfig.DROP_ADENA_MIN_LEVEL_GAP_CHANCE, 100d);
-		final double levelGapChanceToDrop = MathUtil.scaleToRange(levelDifference, -RatesConfig.DROP_ITEM_MAX_LEVEL_DIFFERENCE, -RatesConfig.DROP_ITEM_MIN_LEVEL_DIFFERENCE, RatesConfig.DROP_ITEM_MIN_LEVEL_GAP_CHANCE, 100d);
+		// Ovis raid dropas bus nepriklausomai nuo lygmens
+		// final double levelGapChanceToDropAdena = MathUtil.scaleToRange(levelDifference, -RatesConfig.DROP_ADENA_MAX_LEVEL_DIFFERENCE, -RatesConfig.DROP_ADENA_MIN_LEVEL_DIFFERENCE, RatesConfig.DROP_ADENA_MIN_LEVEL_GAP_CHANCE, 100d);
+		// final double levelGapChanceToDrop = MathUtil.scaleToRange(levelDifference, -RatesConfig.DROP_ITEM_MAX_LEVEL_DIFFERENCE, -RatesConfig.DROP_ITEM_MIN_LEVEL_DIFFERENCE, RatesConfig.DROP_ITEM_MIN_LEVEL_GAP_CHANCE, 100d);
+		final double levelGapChanceToDropAdena = victim.isRaid() ? 100d : MathUtil.scaleToRange(levelDifference, -RatesConfig.DROP_ADENA_MAX_LEVEL_DIFFERENCE, -RatesConfig.DROP_ADENA_MIN_LEVEL_DIFFERENCE, RatesConfig.DROP_ADENA_MIN_LEVEL_GAP_CHANCE, 100d);
+		final double levelGapChanceToDrop = victim.isRaid() ? 100d : MathUtil.scaleToRange(levelDifference, -RatesConfig.DROP_ITEM_MAX_LEVEL_DIFFERENCE, -RatesConfig.DROP_ITEM_MIN_LEVEL_DIFFERENCE, RatesConfig.DROP_ITEM_MIN_LEVEL_GAP_CHANCE, 100d);
 		
 		int dropOccurrenceCounter = victim.isRaid() ? RatesConfig.DROP_MAX_OCCURRENCES_RAIDBOSS : RatesConfig.DROP_MAX_OCCURRENCES_NORMAL;
 		List<ItemHolder> calculatedDrops = null;

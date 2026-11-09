@@ -50,6 +50,7 @@ public class AutoPlayTaskManager
 {
 	private static final Set<Set<Player>> POOLS = ConcurrentHashMap.newKeySet();
 	private static final Map<Player, Integer> IDLE_COUNT = new ConcurrentHashMap<>();
+	private static final Map<Player, Location> HUNT_ZONE_CENTER = new ConcurrentHashMap<>();
 	private static final int POOL_SIZE = 200;
 	private static final int TASK_DELAY = 700;
 	private static final Integer AUTO_ATTACK_ACTION = 2;
@@ -90,6 +91,22 @@ public class AutoPlayTaskManager
 				
 				// Next target mode.
 				final int targetMode = player.getAutoPlaySettings().getNextTargetMode();
+				
+				// Hunt zone data.
+				final Location zoneCenter = HUNT_ZONE_CENTER.get(player);
+				final int searchRange = player.getAutoPlaySettings().getSearchRange();
+				
+				// Safety: do not let the player drift further away from the zone center.
+				// This is NOT a "return to start" - it only prevents going further out.
+				if ((zoneCenter != null) && (Math.hypot(zoneCenter.getX() - player.getX(), zoneCenter.getY() - player.getY()) > searchRange))
+				{
+					if (!player.isMoving() && player.hasAI() && !player.isDisabled())
+					{
+						player.getAI().setIntentionMoveTo(zoneCenter);
+					}
+					
+					continue PLAY;
+				}
 				
 				// Skip thinking.
 				final WorldObject target = player.getTarget();
@@ -234,6 +251,11 @@ public class AutoPlayTaskManager
 						{
 							return false;
 						}
+						// Hunt zone check for items.
+						if ((zoneCenter != null) && (Math.hypot(zoneCenter.getX() - item.getX(), zoneCenter.getY() - item.getY()) > searchRange))
+						{
+							return false;
+						}
 						// Far item: we can move to it.
 						if (player.calculateDistance2D(item) > 70)
 						{
@@ -282,10 +304,16 @@ public class AutoPlayTaskManager
 				}
 				else
 				{
-					creature = World.getNearestVisibleObjectInRange(player, Creature.class, player.getAutoPlaySettings().isShortRange() && (targetMode != 2 /* Characters */) ? AutoPlayConfig.AUTO_PLAY_SHORT_RANGE : AutoPlayConfig.AUTO_PLAY_LONG_RANGE, nearby ->
+					creature = World.getNearestVisibleObjectInRange(player, Creature.class, searchRange, nearby ->
 					{
 						// Skip unavailable creatures.
 						if (nearby.isAlikeDead())
+						{
+							return false;
+						}
+						
+						// Hunt zone check: creature must be inside the hunt zone.
+						if ((zoneCenter != null) && (Math.hypot(zoneCenter.getX() - nearby.getX(), zoneCenter.getY() - nearby.getY()) > searchRange))
 						{
 							return false;
 						}
@@ -375,6 +403,9 @@ public class AutoPlayTaskManager
 		
 		player.setAutoPlaying(true);
 		
+		// Remember the hunt zone center (where autoplay was started).
+		HUNT_ZONE_CENTER.put(player, new Location(player.getX(), player.getY(), player.getZ()));
+		
 		for (Set<Player> pool : POOLS)
 		{
 			if (pool.size() < POOL_SIZE)
@@ -407,6 +438,7 @@ public class AutoPlayTaskManager
 				}
 				
 				IDLE_COUNT.remove(player);
+				HUNT_ZONE_CENTER.remove(player);
 				return;
 			}
 		}
